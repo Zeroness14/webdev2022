@@ -1,0 +1,36 @@
+Git 설치 방법
+
+https://git-scm.com/downloads 
+위 사이트에서 자신의 OS에 맞는 Git 설치파일을 다운받아 설치합나다.
+
+설치 파일을 열고 약관을 읽어주고 Next를 눌러 설치할 경로를 선택하고 다시 Next를 눌러줍니다.
+
+다음 설치할 Component들을 선택하고 깃의 기본에디터를 설정합니다. 
+설정해주고 Next 를 누릅니다. 기본은 Git default editor를 선택되지만 Visual Stdio Code나 Notedpad같이 자신이 주로 사용하고 있는 에디터가 있다면 이것으로 선택해주시는 것을 추천합니다.
+
+Let GIt decide를 체크하고 Next를 누릅니다.
+
+다음은 Git커맨드의 설정을 하는 부분인데 기본으로 되어있는 Git from the Command line and also from 3rd-party software를 선택하고 Next를 합니다.
+
+이후 디폴트로 되어있는 Use the OpenSSL library를 선택해주고 Next를 눌러줍시다.
+
+ * Use the OpenSSL library : OpenSSL 라이브러리 사용, 인증서는 ca-bundle.crt 파일을 사용하여 유효성 검사
+ * Use the native Windows Secure Channel library : Windows 인증서 저장소를 사용, 인증서의 유효성 검사  //위키
+ 
+Checkout, Commit할때의 텍스트라인 엔딩을 선택하고 Next를 누릅니다.
+
+Git Bash 터미널의 형식을 선택해줍니다.
+
+이후 기본으로 체크되있는 것으로 Next를 눌러줍니다.
+
+중간에 옵션을 선택하는데 자신에게 맞는 옵션을 선택해 줍니다.
+ * Enable file system caching : 성능향상을 위해 파일 시스템 데이터를 메모리에 캐시합니다.
+ * Enable symbolic links : symbolic links 활성화합니다.(기존 저장소는 영향을 받지 않습니다)
+
+Install을 눌러 설치를 진행합니다.
+
+설치가 정상적으로 되었다면 Git Bash를 실행시켜 아래 명령어를 설정해줍니다.
+$git config --global user.name "Name명" $git config --global user.email "메일주소" 
+
+아래 명령어로 제대로 성정됬는지 확인합니다.
+$git config --list 
