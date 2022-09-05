@@ -1,0 +1,24 @@
+Git 계정 만드는 방법
+
+
+먼저 GitHub에 가입하려면 github.com 사이트에 방문한다. 
+
+가입을 진행하려면 오른쪽 위의 Sign up 버튼을 클릭한다.
+ * Join GitHub · GitHub - 계정 생성 페이지
+
+Username(사용자 이름), Email address(이메일 주소), Password(비밀번호)를 채워주워야하고 Password는 15자 이상이거나, 숫자와 소문자를 포함해 8자 이상이어한다. 
+
+다음으로 Email preferences는 GitHub 업데이트에 대해서 이메일을 받아볼지 여부이며 받아보고 싶으면 체크한다(마케팅 메일이므로 안 받아봐도 문제는 없다).
+
+마지막으로 Verify your account는 스팸 필터인데 문제가 계속 바뀌는 걸로 알고 있으니 문제를 잘 읽고 맞는 답을 선택해주면된다.
+
+퀴즈에 통과하면 Create account 버튼이 활성화 되며 버튼을 클릭해 준다. 
+
+다음 페이지에서는 개발과 관련된 간단한 설문이 진행된다.
+1. What kind of work do you do, mainly? (주로 어떤 일을 하나요?)
+2. How much programming experience do you have? (프로그래밍 경력은 얼마나 되나요?)
+3. What do you plan to use GitHub for? (GitHub은 어떤 용도로 사용할 계획인가요?)
+4. I am interested in: (관심있는 것들)
+각자의 상황에 맞춰 적절히 선택해주면 되며 설문에 응하지 않고, 바로 스크롤을 내려 다음 페이지로 넘어가도 된다.
+
+여기까지 진행하면 계정 생성이 완료된다. 
