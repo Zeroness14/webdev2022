@@ -1,0 +1,47 @@
+1. IntelliJ 다운로드
+
+1) IntelliJ IDEA 사이트(https://www.jetbrains.com/idea/)에서 [Download] 클릭
+2) 운영체제를 선택한 뒤, Ultimate와 Community 중 다운받을 버전의 [Download] 클릭
+
+
+2. IntelliJ 설치
+
+1) 다운받은 설치 파일 실행
+2) [Next] 클릭
+3) 설치 경로 지정 후 [Next] 클릭
+4) 설치 옵션에 체크해준 뒤 [Next] 클릭
+
+Create Desktop Shortcut : 바로가기 생성
+Update PATH variable : 설치한 프로그램의 bin 폴더 경로를 윈도우 환경변수 PATH에 자동 추가
+Update Context Menu : 프로젝트로 폴더 열기 메뉴 추가
+Create Associations : 사용할 언어 확장자 선택 (자바 .java)
+
+5) 시작 메뉴 폴더 지정, 'JetBrains'인 채로 두고 [Install] 클릭
+6) 설치가 완료되면 아래와 같이 재시작(Reboot) 여부를 묻는다.
+컴퓨터를 바로 재시작 하고 IntelliJ를 사용하려면 'Reboot now'에 체크한 뒤 [Finish] 클릭
+
+
+3. IntelliJ 실행
+
+1) 바탕화면의 바로가기 아이콘 클릭 or 시작 메뉴의 새로 추가한 앱 목록에서 IntelliJ 클릭
+2) 약관 동의 후 [continue] 클릭
+3) JetBrains사의 개선을 위해 사용 정보를 전송하겠는지에 대해 동의 / 거절 선택
+4) IntelliJ가 실행되며 [Progjects] 화면이 기본으로 표시된다.
+
+New Project : 새 프로젝트 생성
+Open : 기본 프로젝트 열기
+Get from VCS (=Get from Version Control) : Github와 같은 버전관리 도구에서 원격 저장소 불러오기
+Open existing Eclipse projects : 이클립스에 존재하는 프로젝트 열기
+
+[Customize]
+컬러 테마, 폰트 크기, 키맵 등을 설정할 수 있다.
+Import Settings : 세팅 파일 불러오기
+All settings : Customize 화면에 상세 설정 가능
+ 
+[Plugins]
+Marketplace : 새로운 플러그인(프로그래밍 언어, 라이브러리, 빌드 툴 등)을 검색 및 설치할 수 있다.
+Installed : 이미 설치되어 있는 플러그인을 확인하거나 업데이트 할 수 있다.
+ 
+[Learn IntelliJ IDEA]
+Start Learning : IntelliJ 사용법과 기본 단축키를 배울 수 있는 트레이닝 코스를 시작한다. Editor에서 IntelliJ가 지시하는 내용들을 실습하는 식으로 진행된다. (ex : 단축키, 검색 방법, Git 연동 등)
+ 
