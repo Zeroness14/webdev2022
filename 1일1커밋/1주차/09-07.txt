@@ -1,4 +1,4 @@
-1. IntelliJ 다운로드
+1. IntelliJ 다운로드 및 설치
 
 1) IntelliJ IDEA 사이트(https://www.jetbrains.com/idea/)에서 [Download] 클릭
 2) 운영체제를 선택한 뒤, Ultimate와 Community 중 다운받을 버전의 [Download] 클릭
