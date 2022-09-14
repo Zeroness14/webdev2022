@@ -1,0 +1,17 @@
+   --- HTML / CSS / JS ---
+1. HTML
+HTML(Hyper Text Markup Language)
+정적 언어
+웹 구조 담당
+
+2. CSS
+CSS(Cascading Style Sheets)
+정적언어
+마크업 언어(HTML, XML 등)가 실제 표시되는 방법
+(색상, 크기, 폰트, 레이아웃 등등..)
+만들어진 구조 예쁘게 꾸미기
+
+3. JS
+JS(Javascript)
+동적언어
+페이지를 동적으로 만들어주는 역할 (프로그래밍언어)
