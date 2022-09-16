@@ -1,0 +1,32 @@
+인텔리J intelliJ 기초 단축키
+
+1. 메인메소드 생성하고 실행하기
+ 1)파일생성 : command + n ,Alt+insert
+ 2) 메인메소드 : psvm
+ 3) System.out.println() : sout
+ 4) 실행환경 실행 현재 : 맥 Ctrl + Shift + R 윈도우 Ctrl + Shift + f10
+ 5) 실행환경 실행 이전 : 맥 Ctrl + R  윈도우 Shift + f10
+
+2. 라인수정하기
+ 1) 라인 복제하기 
+  - 맥 command +d 윈도우 Ctrl + d
+ 2) 라인 삭제하기 
+  - 맥 command +d 윈도우 Ctrl + y
+ 3) 문자열 라인 합치기 
+  - 맥,윈도우 Ctrl + Shift + j
+ 4) 라인 단위 옮기기 
+  *구문 (메소드 안) 
+  - 맥 command + shift + 방향키 윈도우 ctrl + shift + 방향키
+  *라인이동  
+  - 맥 Option + Shift + 방향키  윈도우 Shift + Alt + 방향키
+ 5) Element 단위로 옮기기
+  *구문 (메소드 안) 
+  - 맥 option + command + shift + 방향키 윈도우 alt + ctrl + shift + 방향키
+
+3. 코드 즉시보기
+ 1) 인자값 즉시 보기
+  - 맥 command + p 윈도우 ctrl + p
+ 2)코드 구현부 즉시 보기(직접 안찾아 가도 됌)
+  - 맥 option + space 윈도우 Shift + Ctrl + i
+ 3) Doc 즉시 보기
+  - 맥 F1 윈도우 ctrl +q
