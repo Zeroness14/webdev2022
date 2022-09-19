@@ -1,0 +1,26 @@
+Intellij 설정
+
+1. SDK
+▶ SDK 설정
+ - 신규 프로젝트를 생성할 때마다 기본 설정 적용을 위해 "Structure for New Projects" 클릭
+ - Project Settings > Project > Project SDK > New > JDK 클릭
+ - 원하는 JDK 버전을 선택 하여 준다.
+ - Platform Settings > SDKs 확인
+   (Name도 변경 가능하다.)
+
+ 
+2. Keymap
+▶  Keymap 설정
+ - 이클립스에서 사용하던 단축키(default 단축키)를 intelliJ에서도 사용 할 수 있다.
+   (물론 반대로 intelliJ에서 사용하던 단축키를 이클립스에서도 쓸수 있다.)
+ - Settings for New Projects > Keypmap > Eclipse 선택
+ - Intellij에서 Console창 검색하기
+   > 인텔리제이의 콘솔창에서 Ctrl + F 키를 눌러도 찾기 기능이 동작하지 않을 것 이다.
+      이럴 때 유용한, 찾기 단축키는 직접 설정하는 방법도 추가 해둔다.
+   > File > settings > keymap > "find"검색 > 돋보기 모양의 find에 원하는 검색 단축키 입력       ( 나와같은 경우는 키중복이 찝찝하여 Alt + F 로 입력하여 사용중이다. )
+
+
+
+3. 컴파일러 설정
+▶  Java Compiler 설정
+ - Build, Execution, Deployment > Compiler > Java Compiler > Use compiler > JavaC 선택
