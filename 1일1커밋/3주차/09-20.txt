@@ -1,0 +1,26 @@
+Intellij 설정 -2
+
+1. 테마 변경
+▶  IntelliJ 테마 변경 방법
+ - 계속 한 테마로 사용하기 지겨운 경우 필요한 기능
+ - Appearance & Behavior > Appearnace > Theme > Darcula 선택 (블랙 테마)
+
+ 
+2. 라인수 표시
+▶  IntelliJ 에디터 라인수 표시 방법
+ - 이번 내가 설치한 버전은 디폴트로 라인을 보여 주게 되어 있다. (Version 2019.3.1)
+ - Editor > General > Appearance > Show line Numbers 체크
+
+ 
+3. 스펠링 체크 해제
+▶  IntelliJ 에디터 스펠링 체크 해제 방법
+ - 영문 스펠링 체크 기능은 전문용어, 축약어 등을 체크하여 노란색 밑줄로 표시 하여 준다.
+   이 기능을 해제 하고싶은 경우 다음과 같이 설정 하자.
+ - Editor > Inspections > Spelling 체크를 해제
+
+ 
+4. 대소문자 자동완성 해제
+▶  IntelliJ 대소문자 자동 완성 해제 방법
+ - intellij는 대/소문자를 구분하기때문에 불편한 경우가 있다.(ex. System.out.println 등등)
+ - 이럴땐 다음과 같이 체크 해제 하면 대소문자를 가리지 않고 자동완성 된다.
+   Settings > Editor > Code Completion > Match case를 체크해제
