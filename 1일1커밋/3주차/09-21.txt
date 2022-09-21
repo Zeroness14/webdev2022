@@ -1,0 +1,18 @@
+Intellij 웹 프로젝트 생성하기
+
+실행 초기의 화면에서 "Create New Project"를 선택한다.
+ 
+
+Gradle 빌드 툴로 진행할 예정이므로
+Gradle > Java 선택 후 Next 클릭한다.
+
+ 
+GroupId : 프로젝트의 고유한 이름으로 만들며, 일반적인 패키지 네이밍툴을 따른다.
+ex) org.apache.maven, org.apache.commons
+*ArtifactId : jar 파일에서 버전정보를 뺀 이름이다. 소문자를 사용하며 특수문자를 넣지 않는것이 일반적인 규칙
+*Version : 프로젝트 스냅샷의 최초 버전
+위 사항을 원하는 명칭으로 입력 후 Next 클릭 한다.
+ 
+
+확인 후 Finish를 클릭한다.
+사용 팁과 함께 프로젝트가 생성된다.
