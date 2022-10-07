@@ -1,0 +1,22 @@
+Github page 만들기
+
+먼저 github.com에 접속해줍니다.
+github.com 메인 페이지에서 github 계정이 없다면 홈페이지에서 회원가입을 하고
+이미 계정이 있다면 우측 상단 Sign in에서 로그인 해줍니다.
+github 로그인 페이지에서 로그인을 하면 보이는 페이지의 우측 상단에서 + 기호를 클릭하여 새로운 저장소(New repository)를 만들어 줍니다.
+
+새 저장소 생성
+New repository를 누르면 다음과 같은 페이지로 이동합니다.
+1. Repository name을 입력해줍니다.
+2. Public과 Private 중, 'Public'를 선택해줍니다.(github page 기능을 무료로 사용하기 위해서 입니다.)
+3. Add a README file을 선택해 줍니다.
+
+1~3까지 모두 완료하였다면 페이지 하단의 'Create repository'를 눌러 저장소를 생성합니다.
+
+생성을 완료하고 나면 상단 메뉴바의 Settings를 클릭해줍니다.
+저장소를 생성한 후 Settings 페이지에서 스크롤을 내려 하단의 Github Pages로 이동합니다.
+설정하고 Save 버튼을 누릅니다.
+Save버튼을 누르면 페이지가 새로고침 되는데 다시 스크롤을 내려 하단으로 이동해보면, 생성된 webpage 주소가 링크되어 나타납니다.
+Save를 누른 후 https://(github아이디).github.io/(저장소이름)/ 으로 접속해보면,
+github 웹페이지가 성공적으로 생성된 것을 확인할 수 있습니다.
+
