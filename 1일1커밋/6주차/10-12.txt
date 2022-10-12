@@ -1,0 +1,190 @@
+Octavia Amphora Instance 
+
+## How to connect octavia amphora instance
+시스템을 운영하다보면 가끔 때로는 인스턴스에 직접 들어가 시스템 상태를 체크해야 할 경우가 종종 있습니다. 그때를 대비해서 시스템에 어떻게 접근을 하는지 알고 있다면 참 많은 도움이 되겠죠!!
+ 
+Amphora 인스턴스에 접속을 하기 위해서는 우선 인스턴스에 접속하기 위한 고정 IP주소와 액세스를 하기 위한 ssh key가 필요합니다. IP주소는 대쉬보드의 인스턴스 목록에서 172.24.0.0 대역의 IP를 확인 할 수 있습니다. 앞에서 만든 인스턴스의 고정 IP 주소는 172.24.0.23이였습니다. 그리고, 필요한것은 ssh key입니다. 레드햇 오픈스택은 TripleO라는 배포 노드를 통해 오픈스택을 설치하는데 이때 설치과정에서 Octavia가 사용할 network, flavor, amphora image, security group, ssh key를 만들어 줍니다. 이때 사용되는 ssh key는 배포 노드의 stack 계정에 생성되어진 ssh public key와 private key를 사용합니다. 그러니 ssh key는 배포 노드의 stack 게정에 생성된 ssh private key를 컨트롤러 노드에 복사하면 되겠죠!!
+ 
+1. 그럼, 복사한 ssh key를 이용하여 아래와 같이 amphora 인스턴스에 접속할 수 있습니다.
+
+
+
+
+[heat-admin@con1 ~]$ ssh -i octavia_key cloud-user@172.24.0.23
+The authenticity of host '172.24.0.23 (<no hostip for proxy command>)' can't be established.
+ECDSA key fingerprint is SHA256:+R8/b/0Kc9LXoezkoCWDV7niPPjy/RLsNeJk5dPeBsg.
+ECDSA key fingerprint is MD5:97:f5:87:b6:6c:aa:1c:82:7f:72:0e:2f:4a:5f:21:fa.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.24.0.23' (ECDSA) to the list of known hosts.
+[cloud-user@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]$ 
+
+
+
+
+ 
+2. Amphora 인스턴스에 접속을 했습니다. 우선, 먼저 IP를 확인해 보겠습니다. 네트워크 디바이스는 eth0 하나이고, 고정IP 주소를 통해 들어온 172.24.0.23이 설정되어 있는것을 확인할 수 있습니다. 
+
+
+
+
+[cloud-user@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether fa:16:3e:01:c3:59 brd ff:ff:ff:ff:ff:ff
+    inet 172.24.0.23/16 brd 172.24.255.255 scope global noprefixroute dynamic eth0
+       valid_lft 65661sec preferred_lft 65661sec
+    inet6 fe80::f816:3eff:fe01:c359/64 scope link
+       valid_lft forever preferred_lft forever
+[cloud-user@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]$
+
+
+
+
+ 
+3. 이번에는 프로세스 목록을 확인해 보겠습니다. 프로세스 목록에서 우리는 amphora-agent가 실행이 되고 있고, haproxy 가 실행되고 있는것을 확인할 수 있습니다.
+
+
+
+
+[cloud-user@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]$ ps -ef
+UID        PID  PPID  C STIME TTY          TIME CMD
+...
+root      3180     1  0 Apr22 tty1     00:00:00 /sbin/agetty --noclear tty1 linux
+root      3181     1  0 Apr22 ttyS0    00:00:00 /sbin/agetty --keep-baud 115200 38400 9600 ttyS0 vt220
+root      3184  2844  0 Apr22 ?        00:00:29 /usr/bin/python2 /usr/bin/amphora-agent --config-file /etc/octavia/amphora-agent.conf
+root      3188     1  0 Apr22 ?        00:00:00 rhnsd
+root      3191  2844  0 Apr22 ?        00:00:00 gunicorn: worker [gunicorn]
+root      3234     1  0 Apr22 ?        00:00:00 /usr/sbin/sshd -D
+root      3667     1  0 Apr22 ?        00:00:00 /usr/sbin/haproxy-systemd-wrapper -f /var/lib/octavia/aabe2b08-ebcb-4243-b411-33c24ecca342/haproxy.cfg -f /var/lib/octavia/haproxy-default-user-group.conf -p /var/lib/oct
+nobody    3795  3667  0 Apr22 ?        00:00:00 /usr/sbin/haproxy -f /var/lib/octavia/aabe2b08-ebcb-4243-b411-33c24ecca342/haproxy.cfg -f /var/lib/octavia/haproxy-default-user-group.conf -p /var/lib/octavia/aabe2b08-eb
+nobody    3796  3795  0 Apr22 ?        00:00:16 /usr/sbin/haproxy -f /var/lib/octavia/aabe2b08-ebcb-4243-b411-33c24ecca342/haproxy.cfg -f /var/lib/octavia/haproxy-default-user-group.conf -p /var/lib/octavia/aabe2b08-eb
+...
+cloud-u+ 16522 16503  0 01:17 pts/0    00:00:00 ps -ef
+[cloud-user@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]$
+
+
+
+
+ 
+4. 그럼, VIP는 어디에 설정이 되어 있는걸까요? 우선, sudo 명령어를 이용하여 root 계정으로 전환한 후 ip netns 명령어를 이용하여 가상 네트워크를 확인해 보겠습니다. 가상 네트워크 목록에는 amphora-haproxy라는 가상 네트워크가 생성되어 있는걸을 확인할 수 있습니다.
+
+
+
+
+[cloud-user@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]$ sudo -i
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]# ip netns show
+amphora-haproxy (id: 0)
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]#
+
+
+
+
+ 
+5. 가상 네트워크의 환경설정 정보를 확인해보면 아래와 같이 eth1이라는 가상 네트워크 디바이스와 인스턴스 목록에서 확인되었던 IP, 그리고 로드밸런서의 VIP를 함께 확인할 수 있습니다. VIP는 바로 여기 숨어 있었습니다. 
+
+
+
+
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]# ip netns exec amphora-haproxy ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether fa:16:3e:6d:d2:69 brd ff:ff:ff:ff:ff:ff
+    inet 10.10.10.5/24 brd 10.10.10.255 scope global eth1
+       valid_lft forever preferred_lft forever
+    inet 10.10.10.13/24 brd 10.10.10.255 scope global secondary eth1:0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fe6d:d269/64 scope link
+       valid_lft forever preferred_lft forever
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]#
+
+
+
+
+ 
+6. 그럼, 이번에는 haproxy 모듈의 환경설정 파일을 살펴보도록 하겠습니다. 앞에서 이미 프로세스 목록을 확인했습니다. 그리고, 프로세스 목록을 통해 haporxy 환경설정 파일이 어느 디렉토리에 위치하는지를 확인했습니다. 확인된 디렉토리에 들어가 ls 명령어를 이용하여 파일 목록을 확인해 보면 아래와 같이 UUID와 같은 디렉토리명과 conf 파일 하나를 확인할 수 있습니다. conf 파일을 내용을 확인해 보니 특별한 내용은 없는듯 합니다.
+
+
+
+
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf ~]# cd /var/lib/octavia/
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf octavia]# ls
+3c22219d-7c34-48f3-acf6-6e15f76ec9a1        haproxy-default-user-group.conf  plugged_interfaces
+3c22219d-7c34-48f3-acf6-6e15f76ec9a1.sock  ping-wrapper.sh                  plugged_interfaces.sorted
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf octavia]# cat haproxy-default-user-group.conf
+global
+    group haproxy
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf octavia]# 
+
+
+
+
+ 
+7. UUID와 같이 보이는 디렉토리로 들어가서 파일 목록을 확인해 보면 haproxy.cfg라는 환경설정 파일을 확인할 수 있습니다.
+
+
+
+
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf octavia]# ll
+total 24
+drwxr-xr-x. 2 root root 4096 Apr 22 21:28 3c22219d-7c34-48f3-acf6-6e15f76ec9a1
+srw-rw-rw-. 1 root root    0 Apr 22 21:28 3c22219d-7c34-48f3-acf6-6e15f76ec9a1.sock
+-rw-r--r--. 1 root root   25 Jan 10 10:32 haproxy-default-user-group.conf
+-rwxr-xr-x. 1 root root  209 Jan 10 10:32 ping-wrapper.sh
+-rw-r--r--. 1 root root   23 Apr 22 21:26 plugged_interfaces
+-rw-r--r--. 1 root root   23 Apr 22 21:26 plugged_interfaces.sorted
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf octavia]# cd 3c22219d-7c34-48f3-acf6-6e15f76ec9a1
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf 3c22219d-7c34-48f3-acf6-6e15f76ec9a1]# ls
+3c22219d-7c34-48f3-acf6-6e15f76ec9a1.pid  haproxy.cfg
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf 3c22219d-7c34-48f3-acf6-6e15f76ec9a1]#
+
+
+
+
+ 
+8. haproxy.cfg 파일 내용을 확인해 보니 로드밸런서를 생성할때 지정해 주었던 인스턴스들의 IP가 보이고, 로드밸런서 VIP도 확인할 수 있습니다.
+
+
+
+
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf 3c22219d-7c34-48f3-acf6-6e15f76ec9a1]# cat haproxy.cfg
+# Configuration for cmp-was-lb
+global
+    daemon
+    user nobody
+    log /dev/log local0
+    log /dev/log local1 notice
+    stats socket /var/lib/octavia/3c22219d-7c34-48f3-acf6-6e15f76ec9a1.sock mode 0666 level user
+    maxconn 1000000
+ 
+defaults
+    log global
+    retries 3
+    option redispatch
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+ 
+frontend 3c22219d-7c34-48f3-acf6-6e15f76ec9a1
+    option tcplog
+    maxconn 1000000
+    bind 10.10.10.13:80
+    mode tcp
+    default_backend 42e1058e-a298-42b3-83ce-1123c2d94547
+ 
+backend 42e1058e-a298-42b3-83ce-1123c2d94547
+    mode tcp
+    balance roundrobin
+    stick-table type ip size 10k
+    stick on src
+    timeout check 5s
+    fullconn 1000000
+    server 8d712f3b-1ee1-47ef-8c0a-4779fd044365 10.10.10.8:80 weight 1 check inter 5s fall 10 rise 10
+    server a523158c-cddb-4528-b5bd-660971ff08a1 10.10.10.9:80 weight 1 check inter 5s fall 10 rise 10
+[root@amphora-93b939b0-c1ff-48a0-a2f0-31378aaf5abf 3c22219d-7c34-48f3-acf6-6e15f76ec9a1]# exit
+[heat-admin@con1 ~]$ 
