@@ -1,0 +1,45 @@
+네트워크 서비스 Neutron
+
+nova-network는 nova에서 제공하는 네트워크 서비스로 IP를 할당할 수 있는 개수가 제한됩니다. 
+이런 문제를 해결하고자 나온 네트워크 서비스 프로젝트가 바로 Neutron입니다. 
+Neutron은 다양한 SDN 스위치 플러그인을 연동하여 사용할 수 있으며, VLAN, 터널링 등의 네트워킹 방식을 지원합니다.
+
+1. ML2 (Modular Layer 2)
+ML2는 Havana 버전을 릴리즈 하면서 처음으로 나온 플러그인으로, IceHouse에서 기본 플러그인으로 채택되었습니다. 
+ML2는 기존에 가장 많이 사용했던 OpenvSwitch, Linuxbridge 대신 다양한 네트워크 형태와 메커니즘을 사용 할 수 있습니다. 
+ML2를 사용하면 OpenvSwitch, Hyper-V, OpenDaylight와 같은 SDN(Software Defined Networking) 스위치와 Arista나 Cisco의 Nexus와 같은 실제 물리 스위치를 사용할 수 있습니다. 
+또한 이런 스위치를 사용하여 VLAN, GRE, VxLAN, Flat 방식의 네트워킹 타입을 지원합니다.
+
+2. ML2 타입 드라이버 (Type Drivers)
+Neutron 설치를 들어가기에 앞서 ML2에서 지원하는 네트워킹 방식을 이해를 하고 있어야만 어떤 네트워크 타입으로 설치할 것인지, Neutron 네트워크가 어떻게 작동하는지를 이해할 수 있습니다. 
+여기서는 ML2 타입 드라이버로 지원되는 VLAN 방식, GRE 터널링 방식, VxLAN 방식이 무엇이고, 어떻게 동작되는지에 대해 알아보도록 하겠습니다.
+
+3. VLAN (Virtual LAN)
+일반적으로 한대의 스위치에서는 하나의 랜을 구성할 수 있습니다. 
+랜(LAN: Local Area Network)은 소규모의 사무실이나 학교에서 사용하는 네트워크 방식입니다. 
+VLAN은 아래 그림과 같이 물리 스위치는 한대인데, 그 안에 가상으로 나누어진 랜을 구성할 수 있습니다. 
+많은 회사와 많은 사용자들이 가상 인스턴스(서버)를 생성하는 오픈스택 역시 이런 VLAN을 사용할 수 있습니다. 
+오픈스택에서 VLAN을 사용하려면 Neutron을 설치하면 VLAN을 사용할 수 있습니다. Neutron의 기본 플러그인 ML2 역시 VLAN을 지원합니다. 
+
+4. GRE (Generic Route Encapsulation)
+GRE는 인터넷 프로토콜 위에 가상 PTP(Point to Point)를 제외한 다양한 네트워크 레이어 프로토콜 범위를 캡슐화 할 수 있는 터널링 프로토콜로 시스코에 의해 개발되었습니다. 
+GRE 프로토콜은 클라이언트 간 또는 클라이언트와 서버 간에 VPN(Virtual Private Network)을 만들기 위해 PPTP(Point to Point Tunneling Protocol)과 함께 사용됩니다. 
+GRE는 기존 데이터 패킷을 암호화하여PPP 헤더가 있는 것처럼 인식하도록 구성됩니다. 아래 그림은 R1에서 R4 사이에 터널이 형성이 되고, 해당 터널을 통하여 데이터가 전송됩니다. 
+오픈스택 Neutron을 GRE 모드로 설치했을 경우 컴퓨트 노드에 생성된 VM은 다른 컴퓨트 노드와 통신을 할 경우 터널링 된 경로로 패킷을 주고 받게 됩니다.
+
+5. VxLAN (Virtual Extensible LAN)
+VxLAN은 대규모의 클라우드 컴퓨팅을 구축할 때 필요한 확장성을 해결하기 위한 가상 네트워크 기술입니다. 
+좀 더 구체적으로 말하면 VLAN을 사용하여 MAC 기반의 OSI 레이어 2 이더넷 프레임 안에 레이어 3 UDP 패킷을 캡슐화한 기술입니다. 
+VxLAN을 처음 접하고 이해를 하기 위해서는 오버레이에 대해 알고 있으면 VxLAN을 이해할 때 도움이 많이 됩니다. 
+오버레이는 데이터센터 내에 구축된 물리 네트워크 장비 위에 가상의 얇은 도화지를 올려 놓았다고 생각할 수 있습니다. 
+물리 네트워크에 연결된 서로 다른 컴퓨트 노드의 VM들간에 통신을 할 경우 새로 올려 놓은 도화지 위에 가상의 터널을 그리고, 그 터널을 통해서 통신을 할 수 있게 됩니다. 
+이 때 새로 그린 가상의 터널이 바로 VxLAN 터널인 것입니다.
+
+
+6. 메커니즘 드라이버 (Mechanism Drivers)
+ML2는 타입 드라이버 이외에 메커니즘 드라이버를 제공합니다. 기존 Neutron을 설치할 경우에는 Linuxbridge나 OpenvSwitch를 설치하여 사용하였습니다. 
+이때 어떤 컴퓨트 노드는 Linuxbridge가 설치되어 있고 다른 컴퓨트 노드는 OpenvSwitch가 설치되어 있다고 가정했을 경우 이 두 컴퓨트 노드는 서로 연동을 할 수가 없었습니다. 
+그래서 나온 개념이 바로 ML2의 메커니즘 드라이버인 것입니다. 
+메커니즘 드라이버의 Agent는 기존에 사용하던 OpenvSwitch, Linuxbridge, Hyper-V등을 그대로 사용할 수 있으며, Arista 메커니즘 드라이버나 Cisco Nexus 메커니즘 드라이버를 사용할 수 있습니다.
+아래 그림은 컴퓨트 노드마다 서로 다른 Agent가 설치되어 있을 경우 ML2 플러그인으로 모두 연동을 할 수 있다는 것을 보여줍니다. 
+이렇게 설치된 서로 다른 Agent들 Modular Agent로 추상화 되어 어떤 Agent가 와도 연동이 가능하다는 것을 확인 할 수 있습니다.
