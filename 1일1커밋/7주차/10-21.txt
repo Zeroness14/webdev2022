@@ -1,0 +1,31 @@
+컨테이너 역사
+
+컨테이너 기술은 2000년도에 오픈소스 Unix인 FreeBSD 4.0을 통해 도입된 Jail에서 시작되었습니다. 
+Jail의 한글 의미를 보면 그림과 같이 감옥입니다. 쉽게 말해서 교도소에는 감옥이 여러개가 있고, 그 안에 범죄자들이 구속이 됩니다. 
+특정 감옥 안의 범죄자는 다른 감옥에 있는 범죄자와 소통을 할 수 없습니다. 
+이처럼 FreeBSD Unix 시스템을 Jail이라고 부르는 독립된 작은 구획에 넣어 시스템을 분할하여 사용할 수 있는 것이 특징으로 Jail 안에서 실행되는 프로세스는 Jail 밖의 프로세스에 대해 영향을 줄 수 없다는 특징이 있습니다. 
+
+그 이후에는 이와 비슷한 컨테이너 개념들은 계속해서 사용되고 개발되어 왔습니다. 
+그러다가, 2008년 8월에 처음 릴리즈 된 LXC(Linux Containers)는 최초로 가장 완벽한 리눅스 컨테이너 관리자를 구현했습니다. 
+왜냐하면, 단일 컨트롤 호스트 상에서 cgroup과 namespace를 사용하여 여러 개의 독립된 컨테이너들을 실행할 수 있도록 운영 시스템 레벨의 가상화를 했기 때문입니다. 
+많은 사람들이 알고 있는 Docker는 2013년 3월에 Docker Inc(구 DotCloud)를 통해 릴리즈된 컨테이너 기술입니다. 
+Docker는 기존 컨테이너 기술과는 다르게 새로운 계층화된 이미지를 실행하고 구축하는 간편한 CLI와 서버 데몬, 사전 구축된 컨테이너 이미지 라이브러리 및 레지스트리 서버의 개념 등을 선보였습니다.
+
+Docker가 나온지 얼마 안되 2014년 6월에 Google은 15년간의 노하우가 담긴 Kubernetes를 오픈 소스화 하였습니다. 
+Kubernetes는 컨테이너화 된 응용 프로그램의 배포, 확장 및 관리를 자동화하기 위한 오픈 소스 시스템으로, 응용 프로그램을 구성하는 컨테이너를 논리 단위로 그룹화하여 쉽게 관리하고 검색 할 수 있습니다. 
+Kubernetes가 나오면서 컨테이너 시장은 급속도로 발전했습니다. 
+그러면서 2015년 7월에 OCI(Open Container Initiative)라는 리눅스 컨테이너에 대한 공개 표준을 설계하기 위해 Docker와 컨테이너 기술을 리드하는 여러 회사 및 커뮤니티가 함께 설립한 프로젝트로 Linux Foundation에서 시작되었습니다. 
+
+OCI에서는 컨테이너 런타임 사양과 이미지 사양을 표준화하고 구현하였습니다. OCI가 설립되면서 Runtime spec, Runtime tools, Runc, Image spec, Image tools와 같은 세분화된 기술 표준을 만들어 갔습니다. Apache Mesos는 OCI Image spec을, Docker는 OCI Image Layout의 표준 및 구현에 참여하였습니다. CoreOS는 rkt(rocket)라 불리는 OCI container 및 pod에 대한 runtime 표준 및 구현에 참여하였으며, Cloud Foundry에서 OCI container manager를 지원하였습니다. 
+CNCF(Cloud Native Computing Foundation) 는 2015년 11월에 설립된 단체로 Kubernetes 기술을 중심으로 다양한 기술 발전과 커뮤니티 활동을 장려하며, OCI를 통해 Kubernetes 표준화 업무에 참여하였습니다.
+
+이런 프로젝트 및 단체를 통해 컨테이너 이미지 기술과 런타임 기술이 발전하면서 2016년 1월에는 OCI 컨테이너 이미지와 Docker V2 이미지와 호환되는 Skopeo가 나왔습니다. 
+Skopeo는 컨테이너 이미지 및 이미지 리포지토리에서 다양한 작업을 수행하는 명령 줄 유틸리티입니다. 
+
+CNCF는 2017년 3월 OCI와 함께 Kubernetes container runtime 표준화 업무를 위해 CRI-O(Container Runtime Interface using OCI) 프로젝트를 생성합니다. 
+CRI-O는 OCI 호환 런타임과 kubelet 간의 통합 경로를 제공하기위한 것으로, OCI 호환 런타임을 사용하여 Kubelet 컨테이너 런타임 인터페이스 (CRI)를 구현합니다. 
+Buildah는 2017년 6월에 릴리즈되었으며, OCI 컨테이너 이미지를 쉽게 생성하기 위한 툴입니다. 2018년 2월에 릴리즈한 Podman은 포드(Pod)에서 OCI 기반 컨테이너를 실행하기위한 라이브러리 및 도구입니다. 
+Kubernetes가 대중화 되면서 Container Pod 개념을 사용하는 응용 프로그램을 위한 라이브러리를 제공합니다. 
+Podman은 포드, 컨테이너, 컨테이너이미지 및 컨테이너볼륨을 관리합니다.
+RedHat은 OCI(Open Container Initiative)의 Platinum 멤버로서 다양한 컨테이너 표준화 및 구현에 참여하였으며, 2017년 3월 Docker에서 Enterprise Edition을 릴리즈하면서 2018년 1월에 OCI 멤버 중 하나였던 CoreOS를 인수하였습니다. 그리고, CoreOS와 함께 Podman를 출시하면서, CoreOS의 핵심 컨테이너 기술인 Podman, Skopeo, Buildah를 포함하여 2019년 4월에 Red Hat Enterprise Linux 8.0을 릴리즈하였습니다. 
+그 이후로 Rhel 8을 기반으로 한 Red Hat OpenShift Container Platform 4, Red Hat OpenStack Platform 16은 Podman이 Docker를 대신하게 되었습니다.
