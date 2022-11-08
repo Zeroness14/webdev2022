@@ -55,4 +55,4 @@ DRM(Digital Rights Management)
 
  - POS(Peer offering service)를 둔다.
 
-  > 합법적으로 자료를 제공하는 Peer
+  > 합법적으로 자료를 제공하는 Peer  
