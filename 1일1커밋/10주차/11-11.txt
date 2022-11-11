@@ -1,0 +1,331 @@
+Configuration Management
+
+* Process Activity 보조활동
+
+ - CM(형상관리)
+
+ - QM(품질관리)
+
+
+
+* Configuration Management
+
+ - 눈에 보이는것, version을 관리하는 행동
+
+ - 소프트웨어 시스템 변화를 체계적으로 관리하기 위한 원리 및 과정을 정의
+
+ - Activity
+
+  ⓐ Change Management : 요구사항 변화를 추적(Tracking) 관리
+
+  ⓑ Version management : 여러 사람이 독립적인 개발시 서로 상충되는 것을 없게 관리
+
+  ⓒ System building
+
+  ⓓ Release Management : 출시 관리
+
+  
+
+
+
+* Configuration Management 용여
+
+ - SCI(Software configuration item), CI
+
+  > 프로젝트 산출물중에서 형상관리 대상으로 지정된 항목(ex. code, test data, document, ...)
+
+  > 각 항목은 여러 version을 가질 수 있으며, 별도의 식별자가 부여된다. (ex. code : C, test data : TD)
+
+ - Configuration control
+
+  > CI, SCI, control
+
+ - Version
+
+  > CI, SCI 각 항목의 사례, Instance
+
+ - Baseline
+
+  > 시스템을 구성하는 컴포넌트들의 통합
+
+  > codeline, library, 외부 system의 조합
+
+ - Codeline
+
+  > Component 단위의 버젼들의 묶음
+
+ - Mainline
+
+  > Baseline들의 변화, Sequence
+
+
+ 
+
+ - Release 
+
+  > 특정 고객, 회사에 전달하기 위해 System을 묶어 놓은 것
+
+ - Branching
+
+  > 특정 버전에서 코드라인을 가져오는 것
+
+ - Merging
+
+  > Branching 된 것을 합치는 것
+
+  > 여러 파생 version을 합치는 것
+
+
+
+
+* Change Management(CM Activity 1)
+
+ - 변화 과정(특히, Evolution)을 관리하고, 변동이 효과적으로 일어 나도록 확인하는 것
+
+ - Change management process
+
+  > 변화에 따른 비용, 이득을 분석
+
+  > 변화를 허가
+
+  > 변화를 추적(추적 정보 유지)
+
+  1) Customer가 Change Request(CR)을 Submit
+
+  2) check CR : CR의 타당성을 검증
+
+   2-1) 타당성 있음 : 3) 과정으로 이동
+
+   2-2) 타당성 없음 : close CR(변화 X)
+
+  3) 구현에 관련된 비용, 파급범위를 분석하여 CR을 추가 작성
+
+  4) 특정양의 CR이 모이면 CR을 재분류한다. 분석결과를 통한 타당성 검증
+
+   4-1) 타당성 있음 : 5) 과정으로 이동
+
+   4-2) 타당성 없음 : close CR(변화 X)
+
+  5) SW수정 및 test
+
+   5-1) test success : close CR(변화 O)
+
+   5-2) test fail : 5) 과정을 반복
+
+  > CR(change Request)은 특정 Form이 존재한다.
+
+   : 프로젝트명, 요구자, 날짜, 변경요청내용, 요구사항 분석자, 분석일, 관련된 component, 변화 우선순위...등을 작성
+
+   : 작성시 해당 단계에 관련 된 것만을 작성하면 된다. Change management process가 진행됨에 따라 Form이 완성된다.
+
+ - 위 4) 과정에서의 분류 기준
+
+  > 변화의 이득
+
+  > 변화에 영향 받는 사용자들의 수
+
+  > 변화에 필요한 비용
+
+  > 곧 다가올 Release cycle(Patch형식이냐? New version이냐?) 
+
+ - CM 담당자를 편하게 하기 위해서 source code 맨위에 version 정보를 적어준다.
+
+
+
+* Version Management(CM Activity 2)
+
+ - Version관리 Tool을 사용
+
+ - CI, SCI의 여러 Version을 관리하는 과정
+
+ - 여러 개발자들이 여러 버전에서 수정한 변화가 서로 충돌하지 않음을 확인하는 과정
+
+ - 개발자는 CM이 정해 놓은 것에 따라서 Version up을 해야 한다.
+
+  > Version up 기준은 CM이 정하는 것이며, 주로 날짜나 기능, 수정정도로 Version Up 기준을 마련한다.
+
+ - Baseline, Codeline, Mainline을 관리 하는 과정
+
+ - Version management System(tool) : 버전 관리를 도와주는 System(ex. CVS, RCS, dropbox)
+
+  1) 버전 및 릴리즈 식별자 생성
+
+  2) 각 형상들을 저장해야 함(Database이용). 형상자체를 저장하면 데이터의 크기가 커지기 때문에 바뀐 내용만을 기억한다.
+
+  
+
+   > 예전 버전으로 돌아갈 때 해당 변화를 삭제 시키면 된다.
+
+   > 예전 버전으로 돌아갈 때는 이전을 모두 거쳐가면서 가야한다. 
+
+      위의 그림에서 마지막 단계에서 처음단계로 바로 갈 수 없다. 
+
+   > 이러한 저장방식을 deltas를 사용한 저장방식이라고한다.(Storage management using deltas)
+
+  3) 변화 과정을 기록
+
+  4) 독립적 개발이 가능하도록 해줘야 한다.
+
+   > 서로 충돌이 일어나지 않게 해줘야 한다.
+
+  5) 프로젝트를 도와준다(Project Support)
+
+ - Check-in and Check-out
+
+  > 중앙에 version을 관리해주는 Repository가 존재한다.
+
+  > Check-in : 자신이 개발한 component의 최신 정보를 repository에 저장한다.
+
+  > Check-out : 이전에 개발된 component의 최신 정보를 repository에서 가져온다.
+
+  > Caution
+
+   ~ Error가 있는 것은 check-in하면 안된다.
+
+   ~ 문서를 수정할 때에는 반드시 최신 문서를 check-out 받은 후에 수정을 한다.
+
+ - Codeline branch & Merge
+
+  > Codeline이 파생되어 새로운 codeline이 나오는 경우 branch 됬다고 한다.
+
+  > Merge : branch를 통합하는 과정
+
+
+
+* System building(CM Activity 3)
+
+ - 하나의 완전하고, 수행가능한 System을 만드는 것
+
+ - Compiler에 의해 components, external libraries, configuration files, etc... 등이 하나로 linking 되는 것
+
+ - System building은 version management tool과 연관이 많다.
+
+  > 특정 baseline을 building시 version management tool에서 정보를 가져와야 한다.
+
+ - Building Platforms
+
+  ⓐ The development System(개발 시스템)
+
+   > 각각의 개발자가 개발을 하는 환경
+
+   > Compiler, code editor 등이 System에 포함된다.
+
+  ⓑ The Build Server 
+
+   > 실행 시스템을 build하는 server
+
+   > ⓐ에서 개발된 code를 check-in받아 통합해준다.
+
+   > version management에 포함되지 않은 외부 library와 연결시켜준다.
+
+  ⓒ The target environment
+
+   > 실제 시스템이 수행될 platform 환경
+
+   > ⓑ에서 나온 Software를 실행 Hardware에 올린다.
+
+  
+
+ - 필요한 기능
+
+  > Build Script generation : link에 사용된정보, 포함된 system 정보를 담는 파일을 만든다.
+
+  > Version management System integration : 요구된 version을 가져와 통합을 실시한다.
+
+  > Minimal re-compilation : 재컴파일 되는 부분을 최소화해준다.
+
+  > Executable system creation : 실행 가능한 system을 생성한다.
+
+  > Test automation : Test를 자동으로 해준다.
+
+  > Reporting : test 결과를 보고해준다.
+
+  > Documentation generation
+
+ ※ Minimizing recompilation (재컴파일의 최소화법)
+
+  - Source code와 그에 해당하는 object code에 signature(tag)를 달아서 컴파일을 최소화한다.
+
+  ⓐ Timestamp 사용
+
+   > Source code와 object code에 생성된 시간을 비교하여 recompile 유/무를 판단한다.
+
+   > Source timestamp < object timestamp : Not recompile
+
+   > Source timestamp > object timestamp : recompile
+
+   > 단점 : 같은 시간에 유지 가능한 timestamp는 하나이다. 즉, 동시간에 하나의 source에 대해서 여러명이 수정하지 못한다.
+
+  ⓑ Checksum 사용
+
+   > Source code의 checksum정보를 object code에 함께 저장한다.
+
+   > 컴파일시 Source code의 checksum과 object code가 가지고 있는 checksum을 비교하여 recompile 유/무를 판단한다.
+
+   > timestamp의 단점을 해결 : Parallel compilation이 가능하다.
+
+ - System Building process In Agile Method 
+
+  1) 최신에 build된 mainline system을 개발자 각각의 workspace에 복사를 한다.
+
+  2) 개발자의 환경에서 build & test를 한다 : 잘못된 것을 받았는지 check
+
+  3) 개발(change to the system)
+
+  4) 자신이 수정한 것과 '1)'에서 받은 System과 통합하여 실행해본다.
+
+  5) error가 없다면 check in을 한다.
+
+  6) check in 된 System을 build하여 test를 실시한다.
+
+  7) test결과 이상이 없다면, commit하여 새로운 baseline을 만든다.
+
+  > 담당 :: 1)~5) : 각각의 개발자 / 6)~7) : 형상관리팀
+
+
+
+* Release management(CM Activity 4)
+
+ - 매번 릴리즈 마다 그 릴리즈 정보를 가지고 있어야한다.(Release Tracking)
+
+ - 종류
+
+  ⓐ Major release : 새로운 기능이 추가됨
+
+  ⓑ Minor release : 버그를 고치거나, 사용자의 문제를 해결
+
+ - 같은 버전일지라도 사용자의 요구에 의해 여러 형태가 존재하게 된다.
+
+ - Release Tracing
+
+  > 매번 릴리즈마다 정보를 저장하여 원하는 시기로 이동이 가능해야 한다.
+
+  > 정보 : 문서, 소스파일, 환경정보(OS, Library, compiler ... )
+
+ - 각각 Release를 할때마다 다음의 요소가 추가적으로 요구된다.
+
+  ⓐ Configuration file ⓑ data file ⓒ installation program ⓓ electronic and paper documentation ⓔ packaging
+
+ - Release Planning 
+
+  > 너무 자주 Release를 하게되면, 비용이 증가하게 된다.
+
+  > 너무 Release를 하지 않게되면, 고객이 떠나가게 된다.
+
+  > Factor
+
+   1) 시스템의 기술품질
+
+   2) Platform 환경의 변화
+
+   3) Lehman's Law : 변화가 많으면, 많은 버그를 수반한다. 따라서 많은 변화 뒤에는 bug를 fix하는 release plan이 따라온다.
+
+                              (미리 대비가능해야 한다)
+
+    ------------------------------------------
+
+    4) 경쟁 업체의 상태
+
+    5) 마케팅 요구사항
+
+    6) 고객의 변화 요청
