@@ -1,0 +1,84 @@
+구문과 의미 묘사법
+
+1. Syntax & Semantics (구문 & 의미) 정의
+ - Syntax : 문법(form), 일정형태로 형식에 맞게 작성 된다.
+ - Semantics : 문법에 맞는 형식을 취했을 때 그 문법이 하는 일, 의미
+  ex) if ( <expr> ) <statment>
+ -  프로그래밍 언어의 정의
+  ⓐ 몇몇의 단어(알파벳)은 문장을 만든다.
+  ⓑ 문장이 합쳐져서 언어가 된다.                   //  언어의 일반적 정의
+  ⓒ lexeme(어휘 항목) : 언어를 나눌 때 의미를 가지게 하는 것끼리 나눈 것  //프로그래밍 언어에서의
+  ⓓ token(토큰) : lexeme의 의미 및 행동                                                 //단어와 문장의 역할
+   > 단순성을 위해 가장 낮은 수준으로 표현
+ ex) index = 2 * count + 7 ;
+
+  
+ 
+2. 구문 묘사법
+ - recognizers : 컴파일러에서 사용, 무에서 유를 창조하는 과정이라고 생각하면 된다.
+ - generators : 언어의 문장을 만드는 것. 문법 룰을 여러개 생성하는 것(이 것에 주목하여 공부한다)
+
+3. 문법의 종류
+ - Noam Chomsky에 의해 언어가 네 가지의 문법 유형을 가지고 있다고 정의됨.
+  > Regular > Context-Free > Context-Sensitive> Irregular
+  > 왼쪽으로 갈수록 고차원 언어이며 컴퓨터언어는 Context-Free언어이다.
+ - Context-Free란 : 위치에 따라서 의미가 변하지 않는 문법
+  cf) Context-Sensitive란 : 위치에 따라서 의미가 지속적으로 변하는 문법(인간의 말) 
+
+4. Backus Normal Form (BNF)란?
+ - Chomsky에 의해 발표된 Context-Free언어를 만들기 위해서 제작된 언어
+ - 메타언어를 기술하는 프로그래밍 언어 / 메타언어 : 다른 언어를 기술하는데 사용되는 언어
+ - 구문 구조에 대한 추상화 사용 : 논터미널(Non-terminal)과 터미널(terminal)심볼에 에의해 추상화가 이뤄진다.
+ - BNF, 문법은 단순한 규칙들의 모임이다.
+
+5. BNF 규칙 
+ - 규칙에 앞서 BNF구성과 그 표현법을 보겠다. 
+ ⓐ Non-terminal : Non-terminal은 "<",">"이 두개의 꺽세 안에 만들어 진 것으로 모든 Non-terminal기호는
+                          문법에 의해 정의 되있다.
+ ⓑ Terminal : 일반적인 문장으로 사용자에게 보여지고, 사용자가 작성하는 부분
+ ⓒ Start Symbol :  문법이 사작되는 위치로 <program> 으로 나타낸다.
+ ⓓ LHS(left hand side)와 RHS(right hand side) : "->" 기호로 나눠서 왼쪽과 오른쪽 부분
+  > LHS에는 단하나의 Non-terminal symbol 만 올수 있다.
+  > 반면 RHS는 여러개의 Non-terminal과 terminal기호가 온다.
+ - 정의 규칙 : <non-terminal symbol> -> expr 
+  > expr에는 non-terminal symbol과 terminal symbol이 여러개 온다. 
+  ex) <while_stmt> -> while ( <logic_expr> ) <stmt>
+    > non-terminal : while_stmt, logic_expr, stmt
+    > terminal : while ( )
+ - Start Symbol에 의해 시작된 프로그램에 더 이상 Non-terminal 심볼이 없을 때 까지 지속적으로 실행한다.
+ - 사용되는 연산
+ ⓐ '|' : or표시로 이거 또는 저것을 실행하라라는 의미
+  ex) <A> -> ab
+        <A> -> c          를 하나로 "<A> -> ab|c"  로 표현이 가능하다.
+ ⓑ recursion(재귀)의 사용
+  ex) int a,b,c;를 표현하는 재귀적 표현
+        <program> -> <id_list>
+        <id_list> -> <id>; | <id>, <id_list>;     재귀적 표현이 사용될때는 배이스케이스에 대해서 반드시 생각하자
+
+6. Derivation(유도)
+ - BNF로 구성된 문법으로 하고자 하는 문장이 실행 되는가를 판단하는 것
+ - 기계의 입장이 되서 하나의 non-terminal씩 실행
+ - 유도 실행시 갈등이 발생(여러개의 non-terminal이 올때) left most derivation과 right most derivation중 택 1
+  > 왼쪽 우선이나 오른쪽 우선을 정하면 프로그램이 끝날때까지 지속적으로 규칙에 따라 줘야한다.
+ - 유도 방법으론 프로그램을 따라가보는 방법이 있다. 그리고 이를 Parse Tree라는 것으로 표현 가능하다.
+ - Parse Tree는 유도된 과정을 트리형태로 구현 한 것이다.
+  ex) 
+  * BNF 구성*
+ <program> -> <stmts>
+ <stmts> -> <stmts> | <stmts>; <stmts>
+ <stmt> -> <var> = <expr>
+ <var> -> a|b|c|d
+ <expr> -> <term> + <term> | <term> - <term>
+ <term> -> <var> | const
+
+ 이 BNF 구성을 이용해서 a = b + 3을 표현 할수 있는가? 또 가능하다면 Parse Tree로 표현해봐라.
+ ⓐ 직접 연산 실행 ( '=>' 유도시 왼쪽 문장이 오른쪽 문장으로 변경 될때 사용된다.)
+ <program> => <stmts>
+   => <stmt>
+   => <var> = <expr>    //2개의 non-terminal sybol 존재 left most derivation 선택
+   =>  a = <expr>
+    => a = <term> + <term>
+    => a = <var> + <term>
+    => a = b + <term>
+    => a = b + const                // 위의 BNF구성으로 a = b + 3 표현 가능
+ ⓑ Parse Tree 표현 
