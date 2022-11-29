@@ -1,0 +1,106 @@
+Data Type  - Array & Record Type
+
+1. Array Type 
+ 
+ - 성격이 같은 여러 원소를 묶어 놓은 것
+ - Position(Index 값)에 의해서 접근이 가능하다.
+ - Array_name[subscript]
+ - 설계 이슈
+ ⓐ subscript의 Type는 어떤것을 지원해 줄 것인가?
+  ex) FORTRAN, C, Java : int only
+        Pascal : 몇몇의 순서 타입
+        Ada : Integer or enum
+ ⓑ subscript의 길이를 검사할 것인가?
+  > 이것은 배열에 원소를 넣을시 배열의 범위를 벗어나는 곳에 대한 참조에 대한 error를 잡는 행위
+  > subscript의 길이 검사를 구현하면, 신뢰성을 높일수 있는 장점이 있지만,
+     컴파일러가 복잡해지고, 효율성이 떨어지는 단점이 있다.
+ ⓒ 언제 subscripts의 값이 결정되고, 메모리에 할당할 것인가? 
+  1) Static 방식
+   - 지금까지 봤던 Static 처럼 실행 전에 모든 것을 메모리에 할당
+   - 실행의 효율성이 향상되고, 메모리의 효율이 떨어진다.
+    ex) (In C) "static int buf[10];" or 전역변수에 "int buf[10];"
+  2) Fixed static Dynamic
+   - 컴파일시 변수명에 대한 크기를 확인한후, 선언문이 실행될시 메모리에 할당한다.
+    ex) (in C) main(){ ... f(); } f(){ int buf[10]; }
+          // buf의 크기가 10인 것을 컴파일시 인지후에 f함수고 호출된 후 선언문이 나올때 메모리에 할당을 한다.
+   - Static방식보다 메모리 효휼이 보다 높아지지만,
+     함수 호출과 함수 종료에 따른 할당과, 회수의 반복으로 overhead가 발생 할 수 있다. 
+  3) Static-Dynamic
+   - 선언문이 나올 때 크기결정 및 메모리 할당 실시 
+    ex) (in C) main(){ ... f(N); } f(int size) { int buf[size]; }
+          // main에서 N값이 실행마다 변화(유동적)하기 때문에 배열의 size값도 유동적. 
+          // 즉, 컴파일시 알 수 있는 것은 없으며, 선언문이 나왔을 때 subscript의 크기를 보고 메모리를 할당
+   - Fixed static Dynamic보다 메모리 효율이 더 좋아졌지만 여전히 overhead문제가 존재.
+  4) Heap - Dynamic
+   - assignment를 기준으로 subscript와 메모리가 지속적으로 변하는 것.
+    ex) (in Dynamic Language) a = {3,4,5}; a = {4,5,6,8}; a = {'a','b'}; 
+          // a가 assign을 받을 때 마다 메모리 회수와 할당이 반복되며, subscript의 길이 또한 계속 변한다.
+ ⓓ Subscripts의 개수 > 몇차원 배열까지 지원해줄 것인가?
+  - 현재는 limits가 사라진 상태이다.
+  - C와 Java에서는 subscripts의 개수를 한개로 지정되있다.
+  ※ C나 Java에서 int a[3][4][5];와 같이 다차원이 지원되는 것이 아닙니까?
+   > C나 Java에서의 다차원 처리방식은 a[3]을 만든후
+      a[0]~a[2]까지에 대해서 CONNECT_Value[4]를 생성한 것이다.
+      결국, 오직 한개의 subscripts를 가질수 있지만, 지속적으로 CONNECT되어 결국 limit가 없는 것처럼 된다.
+ ⓔ 초기화
+  - 배열을 생성해줄시 특정 값으로 초기화가 가능하나?
+  ex) (In FORTRAN) 배열을 생성후 DATA구문을 활용하여 초기화를 해야한다.
+        INTEGER ILIST(3); DATA ILIST | 1,2,3 | // |는 c언어의 []와 비슷
+        (In C) 생성과 동시에 초기화가 가능
+        (In Ada) 강력한 초기화 구문을 제공해준다.
+        List : array(1,3) of Float := (1.1,2.2,3.3); // List 구문 : 특정배열을 처음부터 순서대로 초기화 
+        Bunch : array(1,5) of Float := (1 => 1.1 , 3 => 3.3, other => 0);
+        //  Bunch 구문 : 원하는 위치에 값을 넣을 수 있게 한다.
+  ⓕ 어떠한 연산자를 제공해 줄 것인가?
+   ex) (In APL) 수많은 연산자를 제공해준다. // 특수문자를 못찾아서 못적겠다. (ref. ppt)
+         (In Ada) 배열에 대한 assignment를 제공해주어서 한번에 모든 요소를 복사해낼수 있다.
+         A := B; //A배열에 B배열을 통채로 복사해준다. c에서 for문으로 했던 복사작업을 해결!
+         A := B&C; // B행렬과 C행렬을 합쳐서 A에 복사해준다. Catenation기능
+         이외에도 많은 비교연산을 제공해준다. 
+  ⓖ Slice 연산을 제공할 것인가?
+   - Slice 연산 : Array의 특정 부분을 발취하는 것
+    ex) (in MATRAB) 부분의 행 또는 열 또는 부분적인 요소를 발취해낼 수 있다.
+          (in Ada) 1차원에 대한 Slice기능을 제공해준다. 
+ - Implementation of Arrays : Indexing
+  > 특정 주소값을 알아내는 것
+  ex) list = [1 2 3 4 5] // 1차원 배열
+     > address(list[i]) = subscript i에 대한 주소 메모리값 계산 법
+     > address(list[i]) = list배열의 시작주소 + ( i - 1 ) * sizeof(Type)
+                                                              // └→ i인지 i-1인지는 언어마다의 시작 index에 따라 다르다.
+  ex) list =  [1 2 3 ; 4 5 6] // 2차원 배열
+     > 우리가 2차원배열로 저장을 해도 컴퓨터에서는 1차원 배열로 행부터 우선적으로 넣는다.
+     > 메모리 -> [1 2 3 4 5 6]
+     > address(list[i][j]) = list배열의 시작주소 + ( i - 1 ) * colum수 + ( j - 1 ) * sizeof(type)
+                                                              // └→ i/j인지 i-1/j-1인지는 언어 마다의 시작index에 따라 다르다
+     
+ - Associative Array (Hash형 배열)
+  > 순서에 관계없이 모든 value가 key값을 가지고 있다.
+
+
+2. Record(레코드)
+ 
+ - 서로 다른 타입의 데이터를 모아 놓은 것
+ - 각각 타입마다 이름을 가지고 있어서 접근을 한다.
+  ex) (In C) struct id_rec{
+                   int id;
+                   char name[10];
+                   char depart[10];
+                 };  // 이름으로 접근을 시도한다. "id_rec.id"와 같이
+ - 레코드의 계층(ppt참조)
+  ex) (In COBOL) 각 계층마다 다른 숫자를 주어서 구분을 한다.
+        01 ID_REC
+          02 NAME_REC
+            03 FIRST NAME
+            03 LAST NAME
+           02 DEPART
+        (Other) 레코드 안에 사용할 레코드를 제공해준다.(직교성을 보장해준다)  
+
+
+3. Record vs Array
+ 
+ - Array는 같은 Type을 서로 묶어 논 것이고 Record는 다른 Type을 서로 묶어 준 것이다.
+ - Array는 첫번째 요소로부터 떨어진 상대적 위치를 계산하여 원소에 접근하는 반면,
+    Record는 이름으로 접근을 한다. > 특정 위치로 찾아가는 속도가 Array가 더 느리다.
+    > 그러나, 레코드 타입을 다이나믹으로 배열화를 하면은 record만의 속도적 장점이 사라진다.
+
+ 
