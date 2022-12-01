@@ -1,0 +1,61 @@
+Data Type - Pointer
+
+* Pointer 
+ - 주소 값과 Null만 가지는 특수한 Type
+ - 필요성
+  > 주소를 자유자제로 이동하기
+  > Dynamic 한 메모리 관리를 위해서
+ - 설계 이슈
+  ⓐ Scope
+  ⓑ Heap-Dynamic Life time?
+  ⓒ 포인터가 가르키는 타입에 맞춰서 Type을 명시하는가? 안하는가?
+  ⓓ 동적 메모리할당과 주소를 가르키는 것 중 어떤 기능을 제공할 것인가?(둘다 제공도 가능)
+  ⓔ 포인터 타입과 레퍼런스 타입을 모두 제공해주는가?
+ 
+* Pointer Operation
+ int b = 3;
+ int *ptr;
+ ptr = &b; // '=' assignment가능 하다.
+ printf("%d",*ptr); // Dereference 이 가능하다.
+
+* Pointer 사용에 따른 위험현상
+ ⓐ Dangling Pointer
+  - 포인터가 가르키고 있는 주소값이 없을때(주소값 해제 / 빈 포인터) 그 포인터를 이용하여 접근 하려는 경우
+  ex) (In C++) int *ptr1; int *ptr2 = new int;
+                   ptr1 = ptr2; // ptr1과 ptr2는 같은 곳을 가르키고 있다. ptr2는 동적메모리 할당 / ptr1은 주소값
+                   delete ptr2; // ptr2의 데이터 삭제및 메모리 반납 / ptr1은 빈 메모리를 가르키는 빈 포인터이다.
+                   ptr1 = ptr1 + 5; // ptr1이 빈 곳및 쓰레기값을 가르키고 있다. 이때 ptr1이 Dangling Pointer이다.
+                                        // Fatal Error!!
+ ⓑ Lost - Heap - Dynamic = garbage
+  - 힙영역에 사용이 불가능한데 살아 있는 변수 > 메모리 누수를 유발시키는 것
+  ex) (In C++) int *ptr = new int; // int형의 메모리를 ptr에 할당해준다.
+                    *ptr = new int; // int형의 메모리를 다시 ptr에 할당해준다.
+                                         // 그렇다면 윗줄에서 생성한 메모리는 접근이 불가능한데 살아있는 것이된다.
+                                         // 이때, 접근 불가에 살아있는 메모리를 Lost-Heap-Dynamic, Garbage라고 한다
+
+* Pointer 위험현생에 대한 대응 방법
+ - Ada
+  > 주소 연산기능을 제공하지 않는다.
+  > 동적메모리 할당 기능을 지원해준다. 자동으로 garbage처리 기능을 가지고 있어서 메모리누수를 막는다.
+  > 포인터 변수의 초기값은 지정이 안되있다면 무조건 null값으로 초기화하여 이상한 곳을 가르키는 것을 방지
+ - C/C++
+  > 메모리 주소값을 가르키는 것과 동적할당이 모두 가능하다.
+  > 특정 변수의 주소에 접근하는 연산자(&)나 dereferencing(*)연산자등 다양한 연산자를 제공한다.
+  > 프로그램의 효율에 중점을 두었기 때문에 위험현상은 방관한다. 사용자가 일일이 찾아서 수정해야됨.
+  > reference 제공
+ - Java
+  > reference 기능 만을 제공해준다. 동적할당/주소값 지칭 불가능
+  > Java는 Heap영역에서 모든 것을 행하기 때문에 포인터와 일반 변수의 차이가 없다.
+     즉, 자바의 모든 변수는 포인터로 생각해도된다. -> 암시적으로 접근이 가능
+  > Garbage Collection알고리즘을 제공하여 메모리 누수를 막는다.
+
+* reference Type  
+ (in C) int result = 0 ; int &ref_result = result;
+           // 이 경우 다른 메모리에 주소값을 저장하는 것이 아니라 그냥 그 변수를 가르키고 있는 것이다.
+           // 이에 의해서 암묵적으로 사용이 가능하다. "printf("%d",ref_result); 가능
+
+* Pointer 평가
+ - Garbage는 특정 알고리즘을 통해 해결하거나, 방관을 하고 있다. (즉, 해결법은 존재한다)
+    그러나 Dangling Pointer에 대해서는 해결이 되지 않았다.
+  - 포인터가 없으면 하지 못하는 행동이 존재한다. 그러나 사용자에게 필요 이상의 권한을 부여해준다. 
+  - 포인터가 없으면 하지 못하는 행동이 존재하기 때문에 포인터는 반드시 필요로 한다. 
