@@ -1,0 +1,36 @@
+Type-Checking
+
+1. Type-Checking의 필요성
+ - 연산자에 제공되는 피연산자들이 호환이 가능한 Type인지를 판단하는 것이다.
+ - 호환이 가능한 Type이란 무엇인가?
+  > 원래 법칙상 모호성이 없는 것 / 즉, int타입들의 합이 int타입의 결과값에 들어간다는 것과 같은것
+   ex) int result;
+         int i1 = 3; int i2 = 5;
+         result = i1 + i2; // i1과 i2와 result가 모두 같은 타입으로 법칙상 모호성이 없다.
+  > Coercion(묵시적 형변환)rule을 제공하는가? / 암암리에 컴파일러가 Type를 변환하는 것
+   ex) (In C)
+         int_i = float_f1 + float_f2;
+         // C언어의 경우 컴파일시 컴파일러가 경고만 해주고 자신이 알아서 타입변환을 한다.
+         // Coercion현상에 의해서 float_f1과 float_f2의 더한 값에서 소수점을 버린다.
+
+2. Type-Error check time
+ - 모든 type binding이 static으로 일어난다면 컴파일 과정에서 type-error을 검사 할수 있다.
+ - type binding이 dynamic하게 일어나는 것이면 type-error은 실행시에 검사를 실시간 실시한다.
+
+3. Strongly Typed (강타입) 
+ - 모든 type error을 모두 검사하는 경우 강타입이라고하고, 이러한 언어를 강타입언어라고 한다.
+ - 신뢰성을 매우 향상하지만 실행효율이 낮아진다.
+ - 신뢰성을 위해서 강타입언어가 많을 것 같지만, 실제로 그러하지 않다.
+ 
+4. 강타입 언어가 아니라는 것을 찾는 방법
+ - 강타입 언어가 아닌 것을 찾는 것은 type-check를 안하는 경우를 찾으면된다. 
+ ex) (in FORTRAN) EQUIVALENCE(A,I,Z); // 이것에 대해선 type-check를 실시하지 않는다.
+                            > 강타입 언어가 아니다!
+       (in C,C++) Union id{ int a; float b;}; // FORTRAN의 경우와 같은 경우로 별칭시 타입체크를 안한다.
+                      > C언어 자체가 효율성을 위해서 타입체크를 안한다. 심지어 parameter type체크도 하지 않는다. 
+       (in Ada) 강타입 언어로 모든 것에 대한 타입을 실시한다.
+                    하지만, 사용자의 요청에 의해서 타입체킹을 하지 않고 넘어가게 하는 구문을 제공해준다.
+                    A := B UNCHECKED
+       (in Java) 강타입 언어이다.
+ - Coercion rules(묵시적 형변환 규칙)를 가지고 있다면 강타입언어가 아니다.(C/C++)
+  > 묵시적 형변환은 강타입과 많은 연관을 가지고 있다. 
