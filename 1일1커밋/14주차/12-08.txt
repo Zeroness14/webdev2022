@@ -1,0 +1,82 @@
+Statement - Level Control Structure - Multiple Selection Constructs
+
+* if문에 의해서 2개를 선택하는 구조가 생성되었다. 더나아가 사람들은 다중선택 구조를 설계하였다.
+   대표적인 다중선택 구조는 switch-case문이라고 할 수 있다. 이번엔 이 다중선택 구조에 대해서 알아보자.
+
+* 설계 이슈
+ ⓐ 표현식의 구조와 선택구문의 타입은 어떤 것으로 할 것인가?
+  > (in C) switch(선택구문){ ... }  
+ ⓑ 어떤 case를 선택하게 할 것인가? (single, compound, sequential)
+ ⓒ 전체가 하나로 묶여 있는가?
+  > 캡슐화가 되어 있는가?
+ ⓓ 각 case에 해당하는 제어단위는 어떻게 할 것인가?
+  > 해당 case만 실행할 것인가? case이하의 모든 구문(case문은 생략)을 실행할 것인가?
+ ⓔ case로 제공되지 않은 표현에 대한 처리는 어떻게 해줄 것인가?
+  > (in C) switch문의 default 선택
+
+* 초기의 다중 선택구문
+ - (In FORTRAN) arithmetic IF ( three-way selector)
+    IF ( arithmetic expression ) Label1, Label2, Label3
+    > 어떠한 표현식을 3가지로 구분이 가능할때 해당 라벨로 goto를 실시한다.
+    ex) IF ( INUMBER + 10 ) 10, 20, 30 // 어떤 정수형태의 값은 3가지 형태를 취한다. 양수, 음수, 0
+          // 0 일때는 goto10,  음수일때는 goto 20, 양수일때는 goto 30
+          10: stmts;       // 각각 결과에 따라서 goto해와서 실행했기 때문에 아랫값을 지속적으로 실시
+               GOTO 40;  // 따라서, goto문을 이용해서 if문 바깥으로 한번더 점프해야한다.
+          20: stmts;   
+               GOTO 40
+          30: stmts; 
+          40: ... // if문의 밖 
+ - 설계에서 안좋은 현상들 : 캡슐화 되어있지 않으며, 각각의 segments(case)가 GOTO문을 수반한다.
+
+* 현재의 다중 선택구문 
+ ⓐ C / C++ switch 문!
+  - 디자인 선택
+   > form : switch(<expression>) { {<constant_expression> : <stmt>;}+ [default: <stmt>;] }
+   > expression type(선택구문) : 컴퓨터가 판단했을 때, Integer로 인식가능한 것
+                                              (integer variable, enum,char,boolean, ...)
+   > 구조는 Block({})에 의해서 캡슐화 되어있다.
+   > case 이하의 구문을 모두 실행 가능하게 설계를 하였다.(break 구문으로 피할수 있다.)
+       : 유연성과 신뢰성을 교환하였다. 유연성을 높이고 신뢰성을 낮춤 - 편리함을 위해서!!
+   > default 구문의 제공으로 제공되지 않은 값에 대한 처리를 해주었다. 
+   ※ default가 없으면 존재하지 않는 값에 대해서는 그냥 통과한다.
+ ⓑ Ada : case 문!
+  - "case&when"라는 키워드를 이용하여 다중 선택구문을 구현함.
+  ex) case A is
+          when 1 => stmts;
+          when 2...5 => stmts; // sub-range로 조건 선택 가능!
+          when 7|9|11 => stmts; // 여러가지 값을 한줄에 작성이 가능! or연산 가능
+          others => stmts; // c의 switch의 default 개념으로 제공되지 않는 값에 대한 처리 실행. 
+                                  // C와 반대로 others를 지정하지 않고 when에 해당하지 않는 값이 들어오면 error발생
+       end case // case문의 끝을 알려줌. 캡슐화 
+  - 디자인 선택
+   > form : case (<expression>)  {when <expression> => <stmts>;}+ [others => <stmts>;]  end case
+   > expression type(선택구문) : 컴퓨터가 판단할 때, Integer로 인식 가능한 것
+   > 구조는 case ... end case 에 의해서 캡슐화 되있다.
+   > 해당 경우에 해당하면 그 해당하는 것만 실행을 한다. > 신뢰성향상!
+   ※ 이를 하기 위해서 when 뒤에 오는 리터럴값은 유니크해야한다.
+   > other 구문의 제공으로 제공되지 않는 값에 대한 처리를 해주었다.
+   ※ C와 다르게 other이 없을때 존재하지 않는 값이 들어오면 Error가 발생한다.
+ ⓒ two-way selectors(ex) if문)를 이용하여 다중 선택구문을 구현할 수 있다.
+  - 대부분의 경우의 다중 선택구문은 Integer값이나 순서타입, 기타등등 정수로 표현되는 것으로 나눈다.
+    하지만 if문의 경우는 부일식에 기반하여 이뤄지므로 선택을 하는 것에 더욱 적합하다.
+  - 하지만 이러한 경우(two way로 multiple way 표현)에는 깊숙히 중첩되면 판독성이 어려워 진다.
+  ex) if ...
+         then ...
+        else
+          if ...
+            then ...
+          else
+            if ...
+            then ...
+          ........
+    ※ 위의 소스는 Ada의 코드이다. 
+  - 이렇게 가독성이 떨어지는 것에서 가독성을 올리기 위해서 새로운 특수어가 제공되는 언어가 많다.
+      ex) C언어의 else if, Ada의 elsif, Paython의 elif ... 등 (이러한 것을 else-if절 else-if clauses라고 한다.)
+    위의 소스를 elsif를 이용하여 다시 작성한다면 판독성이 향상되는 것을 알수 있을 것이다.
+    if ...
+      then ...
+    elsif
+      then ...
+    elsif
+      then ...
+     end if  
