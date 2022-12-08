@@ -1,0 +1,122 @@
+Statement - Level Control Structure - Lterative Statements
+
+* 반복구문이란?
+ - 반복이 일어나는 구문을 말한다.
+ - 컴퓨터에서 반복이 일어나는 경우는 iteration(for, while)이나 recursion(재귀호출)이 있다.
+  > 두 가지의 경우 중 이번 페이지는 iteration의 경우만 보도록 한다. 
+
+* Iteration control statement(반복 조정 구문) 
+ - 반복 조정 구문(이하 반복문)의 설계 이슈
+  ⓐ 어떻게 반복문을 제어할 것인가?
+   > 제어 방법에는 counter방법과 logic방법이 있다.
+      counter방법은 단순한 숫자로 돌아가는 것으로 for문이 이에해당한다.
+      logic은 조건의 T/F로 반복을 정하는 것으로 while문이 이에 해당한다. 
+  ⓑ 어디서 반복여부를 체크 할 것인가?
+   > 제어를 체크하는 위치는 앞과 뒤의 경우에 따라서 pre-test와 post-test로 나눈다. 
+      pre-test는 반복하기 전에 조건을 체크하는 것으로 while문이 이에 해당한다.
+      반면에, post-test는 반복한 후 조건을 체크하는 것으로 do-while문이 이에 해당한다.
+
+이젠 반복문중에서 counter를 기반으로 하는 것을 먼저 살펴보자.
+
+* Counter-controlled Loops(숫자로 제어하는 반복문) > for문
+ - 설계 이슈
+  ⓐ 제어를 담당하는 값(Loop variable)의 타입은 어떤 것으로 해줄것인가?
+  ⓑ for문 이전과 이후의 값의 변화는 어떻게 통제할 것인가? > scope문제
+  ⓒ loop variable과 loop parameter는 loop가 실행시 변경이 가능하게 할 것인가?
+     
+
+
+  ⓓ loop parameter는 최초에 한번 평가하겠는가? 반복할때마다 평가하겠는가?
+     
+
+
+
+ - FORTRAN 77 and 90
+  > form : DO label var = start, finish[, step-size]  // step-size의 default = 1이다.
+  > step-size는 0을 제외한 모든 값이 가능하다.(77의 경우는 실수까지지원했지만, 90에서는 정수만을 취급)
+  > finish는 변수를 사용해도 된다. 
+   ex) Do 20 index = 1,10 //step-size is default = 1!!
+          stmts
+         20 continue          >> 현재 위치에서 label 20까지 stmts를 해당 경우만큼 반복하라. 
+  > 디자인 선택
+   ⓐ Loop variable의 타입은 77까지는 실수까지 가능햇지만, 신뢰성을 위해 90부터는 정수만가능하게 했다.
+   ⓑ Loop variable의 갑은 항상 루프의 마지막 값을 가지고 있다.
+   ⓒ Loop variable의 값은 loop안에서 변화가 불가능하다. 그러나 Loop parameter의 값은 변화가 가능하다.
+    ※ 하지만, 컴파일시 Loop parameter를 상수로 변환하여 컴파일 하기 때문에 loop안에서 loop parameter의
+        값이 변하여도 반복횟수에는 영향을 주지 않는다. 
+   ⓓ 위에서 나왔듯이 평가는 딱한번 되게 된다. (컴파일러의 loop parameter의 상수 변화로 인해서...)
+     
+
+ - Ada
+  > form : for variable in [reverse] discrete_range loop ... end loop
+  > 디자인 선택
+   ⓐ Loop variable는 discrete_range의 값을 순차적으로 가진다.
+       discrete_range는 컴퓨터가 판단했을시 Integer로 변환가능한 타입(정수의 부분, 열거타입)이 올 수 있다.
+   ⓑ Loop variable은 loop의 지역변수로서 사용되어 loop가 종료되면 함께사라지며, 이전에 같은 이름의 변수를
+       사용해도 그 변수에는 영향을 주지 않는다.
+   ⓒ discrete_range(loop parameter)의 값은 변화가 가능하다.
+    ※ 하지만, 컴파일시 discrete_ranger를 상수로 변환하여 컴파일 하기 때문에 loop안에서discrete_range의
+        값이 변하여도 반복횟수에는 영향을 주지 않는다. 
+   ⓓ 위에 의해서 평가도 딱한번만 한다.
+       
+ - C
+  > form : for ( expr1 ; expr2; expr3 ) stmts
+  > loop var와 parameter를 구분하기가 모호하다. 
+  > 디자인 선택
+   ⓐ Loop variable과 Loop parameter이 존재하지 않는다.
+   ⓑ 어느 경우에도 무관하게 다음으로 이어진다. 
+   ⓒ 모든 것이 변화가 가능하다.
+   ⓓ 먼저 조건을 검사한후에 실행을 한다.
+   ⓔ 한 번 반복을 할때마다 바뀐 값으로 다시 조건을 검사한다.
+  > 가장 유연한 루프문을 제공해준다. (이에 의해 body가 없이 for문 자체로 모든 것을 구현 가능하다.)
+ ----------------C언어의 경우는 가장 흔히 사용하여 체감적으로 알고 있기에 예를 제시하지 않겠다. 
+
+ - C++
+  > C에 추가적으로 for문의 expr에 변수를 선언 가능하게 만들었다.
+
+ - JAVA
+  > C++의 영향을 받지만 몇가지 차이점을 보인다.
+  > 루프 제어문(expr2)부분에는 boolean식으로 제한을 해두었다. 
+  > for loop에서 사용된 변수는 for loop이 끝나면 사라지게 된다.(지역 변수로 취급) 
+
+다음은 논리를 기반으로 하는 Logically-Controlled Loops(While)를 살펴보도록 하겠다. 
+
+*  Logically-Controlled Loops(논리식으로 반복을 결정하는 반복문) > While, Do while
+ - 설계 이슈
+  ⓐ Pre-test를 지원할 것인가? Post-test를 지원할 것인가? 아니면 둘다 지원할 것인가?
+   > 두가지를 모두 지원할 경우 Post-test와 Pre-test의 조건은 같은 모양으로 할 것인가 다른 모양으로 할것인가?
+   > C와 Java는 pre-test와 post-test를 모두 지원해주며, 조건의 모양도 같은 것을 취한다.
+   > Java는 C와 다르게 조건식에 실행구문이 오면안된다. 오직 Boolean만이 올수 있다.
+   > Ada의 경우는 신뢰성을 위해서 Pre-test만을 제공해준다. (알고리즘의 증명에 더욱 편리를 주기 위해서)
+  ⓑ Counting Controlled Loops와 같이보겠는가? 다르게 보겠는가? (C의 경우가 같이 본다고 할 수 있다.) 
+
+* User-Located Loop Control Mechanisms (사용자 임의의 루프 제어)
+ - 특정 경우에 Loop를 나가거나, 이하를 생략 후 다시 반복하라는 것들을 정의 해줌 (In C)( break; continue; )
+ - break문에 대해서 중점적으로 보도록하자.
+ ⓐ Ada
+  > exit [LABEL] when ..... 의 형태로 제공을 해준다.
+     LABEL이 주어지면 when 조건이 맞다면 특정 Loop구문(Label에 해당하는 Loop)을 나간다.
+     LABEL이 없다면 한 단계의 loop를 종료시킨다.
+   ex)
+     
+  > Ada의 exit문은 특정 경우가 있을때, 반복문이 아무리 중첩되있어도 자신이 원하는 위치(Loop level)로 이동
+     가능하게 하는 강력한 구문이다.
+ ⓑ C/C++, JAVA
+  > 익숙하게 사용하기 때문에 간단히 한마디로, break로 딱 한 단계만 나갈 수 있다. 
+
+* Iteration Based on Data Structure (데이터 구조 기반의 순환)
+ - Data Structure에서 해당위치에 값이 있는가 없는가에 의한 판단을 실시하여 순환을 발생한다.
+ - in C
+  
+ - in Perl 
+  > 동적프로그램인 Perl은 foreach문을 만들어 구조형 순환에 더욱 편리를 제공하였다.
+    
+
+
+ - in C#
+  > Perl의 영향을 받아서 foreach문을 제공하지만, c의 영향을 받은 부분도 보인다.
+    
+ ※ foreach문의 평가
+  - 작은 동적인 프로그램에 적합하며, c#등과 같은 스크립트 언어에 적합한 구조를 가지고 있다.
+
+ 
