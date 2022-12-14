@@ -1,0 +1,137 @@
+Sub Program - Local variable, Passing Models
+
+1. Sub-Program의 Local 변수를 static으로 할 것인가 dynamic으로 할 것인가?
+ - 대부분의 언어는 stack-dynamic방식을 취하고 있다.
+  (>stack-dynamic방식이란 예전에 말했듯이, 상대위치를 저장후 call시 메모리를 할당하는 것이다)
+ - 장점
+  > recursion이 가능하다.
+  > 기억 공간을 다른 서브프로그램과 공유를 한다. 메모리 절약
+     ( 특정 서브프로그램이 메모리를 사용 후 반납을 한 공간을 다른 서브프로그램이 사용가능한 것을 의미) 
+ - 단점
+  > 지속적인 할당과 회수로 인한 오버해드가 발생한다
+  > 직접적이지 않은, (상대적 위치를 고려하여 메모리 계산)주소 참조로 속도가 느리다.
+  > 이전에 서브프로그램에서 수행한 값을 같은 서브프로그램과 공유할 수 없다.
+ - Static Keyword
+  > 단점중 3번째 단점을 심각하게 생각하여 제공된 방법
+  > 서브프로그램 실행여부와 관계없이 특정 메모리를 점유하여 지속적인 값을 유지하는 기능을 제공한다.
+   ex) (in C) static keyword
+        (in FORTRAN) save keyword
+
+2. Parameter Passing 방법
+ - Semantic Models
+  ⓐ in mode : 서브프로그램 호출시 값을 제공해준 후 채널을 종류한다.
+  ⓑ out mode : 서브프로그램을 호출하고 서브프로그램이 종료시(return)
+                      formal parameter에서 actual parameter로 값이 넘어온다. 
+  ⓒ in-out-mode : 서브프로그램 호출시 값을 제공하고 리턴시 값을 받는다.(ⓐ+ⓑ) 
+ - 파라미터의 전달이 값으로 이루어지는가 주소값으로 이루어지는가?
+
+3. Parameter Passing Models
+ ⓐ Pass-by-value(in mode), Call by value
+  - caller에서 callee로만 전달이 가능하다. 
+  - 서브프로그램이 시작될 때 caller의 값을 callee로 전달해준다.
+  - 만약, 주소값을 전달 한다면, In mode를 유지하기 위해서 Only Read로 제공해야한다.
+    (즉, write protection기능을 제공해주어야 한다. 이를 제공안해주면 Pass-by-reference처럼 작동을 한다.)
+    ex) (In C) 뒤에서 보겠지만 C언어는 Pass by Value방식만을 제공해주나,
+                   write protection을 걸어주지 않는 다면, Pass by reference처럼 사용이 가능하다.
+                   void sub(const int *ptr1, int *ptr2);
+                   // ptr1은 const 키워드로 write protection을 걸어 읽기만 가능하다. 
+                   // 이에비해 ptr2는 주소값을 이용하여 값을 변경이 가능하여 Pass by reference처럼 사용이된다.
+  - 같은 값을 다른 공간에 복사하여 사용하므로, 메모리효율이 낮고, 메모리 카피에 의해 시간비용이 높다.
+    (추가적으로 주소값이 전달할때 write protection을 걸어준다면, 이 시간도 포함이 된다.)
+
+ ⓑ Pass by result(out mode), Call by result
+  - callee에서 caller로만 전달이 가능하다. 
+  - 서브프로그램이 종료시 되면서 callee의 파라미터 값을 caller의 parameter로 전달해준다.
+  - 단점
+   > 값만을 가지고, 단지 전달만 이루어지기 때문에 path by value와 같은 단점이 발생
+   > 순서에 따라 다른 값이 나올 수 있다.(Order dependence)
+    ex) sub1(int a, int b) { a = 2; b= 3; } main(){ sub1(x,x); }
+         위에서 sub1을 호출하면 a, b에 각각 2와 3이 들어간후 caller의 파라미터로 바인딩해준다.
+         하지만, 위와 같이 main에서 파라미터를 같은 변수 x로 지정하면 x의값은 2가 되겠는가 3이 되겠는가?
+         이러한 단점때문에 언어개발자는 사용자에게 전달방법을 왼쪽우선이냐, 오른쪽우선이냐를 정해줘야한다.
+
+ ⓒ Pass by value-result(in - out - mode) call by copy, call by value-result
+  - ⓐ+ⓑ의 개념이다. 즉, caller와 callee의 양방향 전달이 가능하다.
+  - 서브프로그램이 시작될시 pass by value방식으로 caller에서 callee로 값을 전달해주고,
+     서브프로그램이 종료될시 pass by result방식으로 callee에서 caller로 값을 전달해준다. 
+  - 여기서 다음에 나오는 것과 비교해보기 위해서 서브프로그램 실행시 caller와 callee가 하는 일을 나눠 보면,
+   caller는 단지 호출을 해놓고 callee가 무엇을 하는지 전혀 관혀 하지않고 마지막에 결과값만 파라미터로 받는다.    callee는 열심이 일을 한다. 이는 어떠한 문제를 발생하는가?
+   
+   callee입장에서는 2번의 과정을 거쳐서 변수의 값을 변화하지만, caller입장에선 단 한번으로 이루어진다.
+   만약, callee의 paoint A지점에서 프로그램이 죽는다면, 서브프로그램이 정상적으로 종료가 되지 않아
+   a,b,c의 값은 변화가 없이 1,2,3이 될 것이다.
+  - 단점 : ⓐ단점 + ⓑ단점
+
+ ⓓ pass by reference(inout mode) pass by sharing, call by reference, call by sharing
+  - Actual parameter의 주소값을 Formal parameter로 전달을 해준다.
+     즉, 두개의 이름으로 하나의 변수를 가르킨다. (별칭)
+  - 이는 ⓐ~ⓒ에서 나타난 파라미터 전달시 메모리 카피로 인한 시간과 메모리 낭비를 없에기 위해서 나타났다.
+  - 주소값을 통해서 접근을 하여 변수를 변경하므로 서브프로그램이 끝남과 동시에 값이 정해진다.
+     위와같은 특징으로인해서 위에 ⓒ에있는 그림에서 sub1의 Point A지점에서 서브프로그램이 종료되면,
+     주소값을 가지고 값을 변경하였기 때문에 a, b, c의 값은 1이 증가한 2, 3, 4가 될 것이다.
+  - 단점
+   > access가 느려진다.
+      : 시간적 단점을 줄였다며, 이것은 무슨소리냐? 라고 하겠지만, 파라미터의 전달속도는 빨라졌지만,
+        변수를 사용함에 간접 주소 방식으로 접근을 하기 때문에 시간이 느려진다.
+        즉, 호출을 빨라졌지만, 돌아가는 속도는 느려진다. (컴퓨터의 발달로 무시할만해졌다.)
+   > 답이 달라질 수 있다.
+      : 주소값을 가지고 연산을 하기때문에 다양한 별칭이 발생
+      : actual parameter와의 충돌, 배열 요소끼리의 충돌, global변수와 local변수의 충돌
+       ex) 가장심각한 문제를 초래할 수 있는 마지막 global변수와 local변수의 충돌을 보자
+             int *ptr;
+             void sub(int *local){ extern int *ptr; ... }
+             main(){ extern int *ptr; sub(ptr);}
+             // 이 경우 서브프로그램에서 전역변수인 ptr이 ptr과 local에 의해서 별칭되어있다.
+             // local에 의해서 전역변수가 변경되면 프로그램 전체적으로 영향이 발생하여, 오류가 발생할 수 있다.
+ 
+ ⓐ~ⓓ 까지의 단점이 발생하는 이유는...
+  - ⓓ의 경우 주소값을 주었기 때문에 원하는 것보다 더 큰 권한을 제공하여서...
+  - ⓐ~ⓒ의 경우에는 기억 메모리나 시간적 비용이 많이들어서...
+  - 언어개발시 제작자가 판단으로 제공해야 할 것이다.
+  마지막 방법으로 독특한 방법인 pass-by-name에 대해서 알아보자.
+ 
+  ⓔ pass by name(multiple mode)
+   - multiple mode란? in, out, inout 모두 가능하다는 것을 의미한다.
+   - callee 파라미터가 caller의 파라미터의 이름으로 변경되고, Assignment시 Binding이 발생한다.
+     (formal parameter가 actual parameter의 이름으로 대체)
+    > Late binding이 된다고 한다. 
+   - 만약, Actual 파라미터의 변수형태가
+    > scalar variable(일반 특정 값을 나타내는 변수)이라면, call-by-reference로 작동
+    > constant expression(변하지 않는 상수값)이라면, call-by-value로 작동
+    > Array(배열)라면, 아래의 예처럼 여러 요소가 바뀔 수 있다. 즉, 어느 경우에도 속하지 않는다. 
+  - 장점 : Late Binding을 잘 사용한다면, 유연하게 프로그램을 작성할 수 있다.
+  - 단점 : 너무 교묘하여 복잡하다. 즉, 이해하기 힘들고 판독하기가 힘들다.
+    ex1)
+   
+
+    ex2)
+   
+ 
+3. 언어별 Passing Method Select
+ⓐ FORTRAN
+ - 77이전에는 pass-by-reference만 가능
+ - 77에서부터 몇몇 scalar variable에 대해서 pass-by-value-result방식을 취하게 제공
+ⓑ ALGOR 60
+ - pass - by - name 방식을 사용함
+ - 구현이후 구현이 힘들고 구현비용이 많이들어 이후에는 거의 사용되지 않았다.
+ⓒ ALGOR W
+ - pass-by-value-result 방식을 취했다. 
+ⓓ C
+ - 원칙적으론 pass-by-value방식을 제공해준다.
+ - 주소값을 제공할때, write protection(const keyword)를 적용하지 않으면, 주소값으로 변경이 가능
+  > pass-by-reference 방식을 간접적으로 사용이 가능하게 해주었다.(pass-by-value에 예 있습니다~)
+ⓔ Pascal, Modula-2 
+ - pass-by-value가 기본적으로 적용되지만, option을 주어서 pass-by-reference로 적용할 수 있다.
+ⓕ C++
+ - C와 유사하다. 그러나 C++에서는 pass-by-reference를 직접적으로 제공을 하였다.
+  ex) void sub(const int *p1, int p2, int *p3); // p1,p3는 reference방식, p2는 value방식으로 받는다.
+                                                              // p1은 const로 write protection이 걸려있다.(변경 불가)
+ⓖ Ada
+ - in, out, in-out 모드를 모두 제공해준다. 변수를 생성할때 어떤 방식으로 값을 받을 것인지 정한다.
+  ex) procedure pro1{
+          A: in INTEGER // pass by value(in-mode)
+          B: out INTEGER // pass by result(out-mode)
+          C: in-out INTEGER // pass by value-result(in-out-mode)
+        }
+ⓗ Java
+ - C와 유사하다. 그러나 pointer 대신 참조변수를 제공해준다. 
