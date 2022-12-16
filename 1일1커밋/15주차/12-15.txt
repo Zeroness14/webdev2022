@@ -1,0 +1,22 @@
+Sub Program - Type Check, Parameter Passing 구현법
+
+* Type Checking of Parameters
+ - FORTRAN & Original C : none
+ - FORTRAN90, JAVA, Ada, Pascal, Modula-2 : 항상 실행
+ - ANSI C, C++ : 사용자의 선택으로 type check를 할지 안할지 여부를 정할 수 있다.
+
+ * Parameter Passing 구현법
+ - 대부분 runtime stack을 이용하여 passing 방법을 구현한다.
+  
+ - pass-by-name의 경우에는 stack에 치환에 필요한 코드가 들어간다.(비용 높아짐)
+  > 이러한 코드를 code segment 또는 thunks라고 부른다.  
+
+*  Parameter Passing 선택
+ - 일반적으로 언어들은 call by value 와 call by reference의 방법을 구현해주고 있다.
+   간단한 값은 call by value 방식으로 Passing을 해주고,
+   구조체 타입(Struct, Array 등)은 call by reference로 해주는 것이 일반적이다. 
+ - Ada의 Parameter Passing 선택
+  > Ada의 경우는 CBV와 CBR을 모두 제공해주었을때 다음과 같은 문제점이 발견했다
+     CBV와 CBR로 구현된 것이 중간에 error로 프로그램이 죽게 됬을때 메인이 가지고 있는 값이 다르다는 것이다.
+     (이예는 Passing 방법을 소개하는 곳에서 자세히 했으니 넘어간다.)
+  > 97년 이후에 inout모드는 CBR, in과 out모드는 CBV로 하게끔 정해놓았다.
