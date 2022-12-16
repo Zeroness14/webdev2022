@@ -1,0 +1,69 @@
+Sub Program - 나머지 Phase 1
+
+* Multidimensional Array as Parameter ( 파라미터로서의 다체원 배열 Passing )
+ - C언어에서 프로그램을 개발한다고 생각하자. A라는 사람이 main을 구현하고 B라는 사람이 sub을 구현한다.
+   이 경우 main의 개발자 A가 sub에 다차원배열을 보내려고한다고 하자. 그러면 B는 main에서 오는 배열의
+   크기가 정해지지 않는한 구현할 수가 없게 된다.
+ - 즉, 파라미터로 배열을 Passing하게되면, 프로그램을 나눠서 구현할 때의  문제점이 발생한다.
+ - 또한, Data Type의 배열에서 봤듯이 다차원 배열에서 저장장소의 위치에 접근하기 위해서는 column size를
+   알아야한다. 즉, 각 서브프로그램은 넘어오는 배열의 행과 열(때로는 그 이상)의 길이를 알고 있어야한다.
+   이 사실을 가지고 각 언어별 선택을 살펴보도록 하자.
+ ⓐ C/C++
+  > 일반적으로 C언어에서 Array를 파라미터로 Passing을 하면, 서브프로로그램 부분에 첫 번째 subscript를
+     제외하고는 모든 subscript를 알려주어야한다. 이는 배열의 크기가 달라지면 새로운 서브프로그램을 다시 
+     정의 해야하는 불편함을 가지고 있다. (이렇게 해주면 배열 원소에 대한 접근을 컴파일러에 저장된
+     Mapping방법을 통해서 알아서 해준다.)
+  > 배열의 크기가 달라져도 계속해서 사용하기 위해서 C/C++은 사용자가 프로그램에서 Mapping방법을
+     구현해주기를 바란다. 
+     (이 경우 배열의 시작 주소와 행과 열의 수를 각각 같이 넘겨줘서 사용자가 Mapping을 구성한다.)
+  > C의 경우는 경험적인 측면에서 많이 알고 있을 것 같으므로, 이 정도로 넘어가도록 한다.
+ ⓑ Ada/Java
+  > Ada와 Java의 경우는 배열 자체가 Object로 정의가 된다. Object의 Method를 통해서 각각 원하는 
+     행과 열(때로는 그 이상)의 길이를 알아내서 사용할 수 있다.
+  > Ada의 경우 'range(N) 을 통해서 각 길이를 알아낼 수 있다.
+     ex) Type Mat_type is Array(Integer range<>, Integer range<>)of Integer; // int형의 2차원 배열 타입정의
+           Mat1 : Mat_Type(1..100, 1..20) // 100 x 20 행렬 Mat1을 생성
+           Function Total(Mat: in Mat_Type) return Integer // 2차원 행렬을 파라미터로 가지는 함수 정의
+           Is sum=:= Integer := 0; // int형 변수 sum을 정의
+             begin
+               for Row in Mat'range(1) loop  // Row에 1부터 Mat'range(1)까지 순회 실시. Mat'range(1) = 100   
+                 for Col in Mat'range(2) loop // Col에 1부터 Mat'range(2)까지 순회 실시. Mat'range(2) = 20
+                   sum := sum + Mat(Row,Col);
+                 end loop
+             end loop 
+             Return sum;
+           End Total; 
+  > Java의 경우는 range()메소드를 불러와서 길이를 알수 있다.
+
+* Parameters that are Sub-Program Name(파라미터에 서브프로그램이 있는 경우) 
+ - 이 때 발생하는 문제는 과연 파라미터에 있는 서브프로그램의 타입을 검사하는가의 여부이다.
+  ex) float fun(float x){...}
+        int sum(fun(x),int y,int z){...} 
+        // 이 경우 sum에서 파라미터로 들어있는 fun의 파라미터인 x의 타입이 float인지 검사할 것인가?
+        // 또, 그 fun이 리턴 한 타입이 float가 맞는지에 대해서 검사할 것인가?
+   > 이 문제에 대해서 과거에는 하지 않았지면 근래에 탄생하는 언어에서는 하는 추세로 가고 있다.
+ - 이 때 발생하는 또다른 문제로 referencing environment(참조 환경)문제이다. 
+  > 이 문제를 해결하기 위해서 각 언어는 다음과 같은 방식중 한가지 방법을 선택해야한다.
+  ⓐ Shallow Binding : 가장 최근 호출된 곳에서의 값을 가져다 사용한다.
+  ⓑ Deep Binding : 구조적으로 보았을때 상위에 정의된 값을 가져와 사용한다.
+  ⓒ Ad hoc binding : 자신을 호출하기 직전값을 사용한다. (자신의 이름이 나오기 전의 값이라고 생각하면 편함)
+  
+  > 일반적으로 static-scope를 가지는 언어들은 deep binding방식을 취하고,
+     dynamic-scope를 가지는 언어들은 shallow binding방식을 취한다.
+  > Ad hoc은 정의는 되어있지만 실제로 사용되지는 않는다.
+
+* Overloaded Sub-Program(서브프로그램의 오버로드) 
+ - 이름이 하나인데 기능이 여러가지인 프로그램을 오버로드된 프로그램이라고 한다.
+  ex) 절대값을 가지는 abs함수는 실수형, 정수형에 모두 사용이 가능하다.
+        abs(-1) = 1   // abs(-1.3) = 1.3
+  ex) 자바나 C++의 생성자 오버로드
+ - Overloaded를 구현하는 것은 두가지 방법이 있다.
+  ⓐ C++, Ada와 같이 언어에서 기능을 built-in(일체화, 언어의 한부분)으로 구현한 것을 사용하는 방법.
+  ⓑ 사용자가 자신만의 Overloaded한 것을 만드는 경우
+ - 오버로드는 폴리모오피즘(Polymorphism : 다향성)측면으로 볼 수 있다.
+ - 오버로드를 할 경우 조작(로직)은 같은데 타입이 다르다고 여러번 선언해줘야하는 경우가 발생한다.
+  ex) sum ( int x , int y ) { return x+y; }
+        sum ( float x , float y ) { return x+y; }
+        sum ( char x , char y ) { return x+y; } 
+        //sum의 로직은 x+y인데 타입이 다르다는 이유로 오버로드를 위해서 여러번 정의 
+  - 이러한 것을 비효율적으로 생각하여 Generic Sub-Program이 나왔다. 이는 C++과 Ada에서만 지원해준다. 
